@@ -1,2 +1,2 @@
 # Parsec Trials
-Playing around with parsec, to learn it
+Playing around with parsec just to learn it
