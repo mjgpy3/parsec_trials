@@ -8,5 +8,8 @@ main = hspec $ do
   describe "parsing lists" $ do
     it "works for empty" $ do
       parseText "()" `shouldParseTo` TList []
+  describe "parsing integers" $ do
+    it  "works for 0" $ do
+      parseText "0" `shouldParseTo` TInt 0
 
 shouldParseTo a b = a `shouldBe` Right b
