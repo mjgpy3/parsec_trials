@@ -17,5 +17,8 @@ main = hspec $ do
       parseText "42" `shouldParseTo` TInt 42
     it  "works for -42" $ do
       parseText "-42" `shouldParseTo` TInt (-42)
+  describe "parsing floats" $ do
+    it  "works for 42.2" $ do
+      parseText "42.2" `shouldParseTo` TFloat 42.2
 
 shouldParseTo a b = a `shouldBe` Right b

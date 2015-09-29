@@ -3,14 +3,24 @@ module Trials where
 import Text.ParserCombinators.Parsec
 
 data TExpr = TList [TExpr]
-  | TInt Int deriving (Show, Eq)
+  | TInt Int
+  | TFloat Float deriving (Show, Eq)
 
 trials :: Parser TExpr
 trials = number
   <|> list
 
 number :: Parser TExpr
-number = negativeInt <|> int
+number = try float
+  <|> negativeInt
+  <|> int
+
+float :: Parser TExpr
+float = do
+  w <- many1 digit
+  char '.'
+  f <- many1 digit
+  return $ TFloat $ (read (w ++ "." ++ f) :: Float)
 
 negativeInt :: Parser TExpr
 negativeInt = do
