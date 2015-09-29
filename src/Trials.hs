@@ -19,10 +19,8 @@ number = try float
 negativeFloat :: Parser TExpr
 negativeFloat = do
   char '-'
-  w <- many1 digit
-  char '.'
-  f <- many1 digit
-  return $ TFloat $ (read ('-':w ++ "." ++ f) :: Float)
+  TFloat f <- float
+  return $ TFloat $ negate f
 
 float :: Parser TExpr
 float = do
@@ -34,8 +32,8 @@ float = do
 negativeInt :: Parser TExpr
 negativeInt = do
   char '-'
-  t <- many1 digit
-  return $ TInt $ (read ('-':t) :: Int)
+  TInt i <- int
+  return $ TInt $ negate i
 
 int :: Parser TExpr
 int = do
