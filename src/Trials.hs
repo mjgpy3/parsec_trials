@@ -12,8 +12,17 @@ trials = number
 
 number :: Parser TExpr
 number = try float
+  <|> try negativeFloat
   <|> negativeInt
   <|> int
+
+negativeFloat :: Parser TExpr
+negativeFloat = do
+  char '-'
+  w <- many1 digit
+  char '.'
+  f <- many1 digit
+  return $ TFloat $ (read ('-':w ++ "." ++ f) :: Float)
 
 float :: Parser TExpr
 float = do
