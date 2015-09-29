@@ -1,14 +1,30 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 module Trials where
 
+import Data.Maybe
 import Text.ParserCombinators.Parsec
 
 data TExpr = TList [TExpr]
   | TInt Int
-  | TFloat Float deriving (Show, Eq)
+  | TFloat Float
+  | TSpace deriving (Show, Eq)
 
-trials :: Parser TExpr
-trials = number
+filterTExprs :: TExpr -> Maybe TExpr
+filterTExprs (TList xs) = Just $ TList $ catMaybes $ map filterTExprs xs
+filterTExprs TSpace = Nothing
+filterTExprs x = Just x
+
+trials :: Parser [TExpr]
+trials = many $
+  number
   <|> list
+  <|> whitespace
+
+whitespace :: Parser TExpr
+whitespace = do
+  char ' '
+  return TSpace
 
 number :: Parser TExpr
 number = try float
@@ -43,7 +59,10 @@ int = do
 list :: Parser TExpr
 list = do
   char '('
+  contents <- trials
   char ')'
-  return $ TList []
+  return $ TList contents
 
-parseText = parse trials ""
+parseText text = case parse (trials) "" text of
+  (Right exprs) -> Right $ catMaybes $ map filterTExprs exprs
+  err -> err
