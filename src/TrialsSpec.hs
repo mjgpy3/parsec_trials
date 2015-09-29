@@ -13,5 +13,9 @@ main = hspec $ do
       parseText "0" `shouldParseTo` TInt 0
     it  "works for 1" $ do
       parseText "1" `shouldParseTo` TInt 1
+    it  "works for 42" $ do
+      parseText "42" `shouldParseTo` TInt 42
+    it  "works for -42" $ do
+      parseText "-42" `shouldParseTo` TInt (-42)
 
 shouldParseTo a b = a `shouldBe` Right b

@@ -5,19 +5,28 @@ import Text.ParserCombinators.Parsec
 data TExpr = TList [TExpr]
   | TInt Int deriving (Show, Eq)
 
-trialsParser :: Parser TExpr
-trialsParser = intParser
-  <|> listParser
+trials :: Parser TExpr
+trials = number
+  <|> list
 
-intParser :: Parser TExpr
-intParser = do
+number :: Parser TExpr
+number = negativeInt <|> int
+
+negativeInt :: Parser TExpr
+negativeInt = do
+  char '-'
+  t <- many1 digit
+  return $ TInt $ (read ('-':t) :: Int)
+
+int :: Parser TExpr
+int = do
   t <- many1 digit
   return $ TInt $ (read t :: Int)
 
-listParser :: Parser TExpr
-listParser = do
+list :: Parser TExpr
+list = do
   char '('
   char ')'
   return $ TList []
 
-parseText = parse trialsParser ""
+parseText = parse trials ""
