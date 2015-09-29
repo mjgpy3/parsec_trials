@@ -11,8 +11,8 @@ trialsParser = intParser
 
 intParser :: Parser TExpr
 intParser = do
-  char '0'
-  return $ TInt 0
+  t <- many1 digit
+  return $ TInt $ (read t :: Int)
 
 listParser :: Parser TExpr
 listParser = do
