@@ -16,7 +16,7 @@ filterTExprs x = Just x
 
 trials :: Parser [TExpr]
 trials = many $
-  number
+  try number
   <|> symbol
   <|> list
   <|> whitespace

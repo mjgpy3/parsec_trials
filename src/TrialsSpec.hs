@@ -38,5 +38,7 @@ main = hspec $ do
       parseText "abcedfg" `shouldParseTo` [TSymbol "abcedfg"]
     it "works for separated symbols" $ do
       parseText "cow dog" `shouldParseTo` [TSymbol "cow", TSymbol "dog"]
+    it "works for -" $ do
+      parseText "-" `shouldParseTo` [TSymbol "-"]
 
 shouldParseTo a b = a `shouldBe` Right b
