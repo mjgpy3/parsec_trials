@@ -12,6 +12,8 @@ main = hspec $ do
       parseText "  (  ) " `shouldParseTo` [TList []]
     it "parses a nested list" $ do
       parseText "(())" `shouldParseTo` [TList [TList []]]
+    it "parses _crazy_ nested lists" $ do
+      parseText "((() () ()))" `shouldParseTo` [TList [TList [TList [], TList [], TList []]]]
   describe "parsing integers" $ do
     it  "works for 0" $ do
       parseText "0" `shouldParseTo` [TInt 0]
