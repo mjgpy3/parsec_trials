@@ -68,10 +68,14 @@ int = do
   return $ TInt $ (read t :: Int)
 
 list :: Parser TExpr
-list = do
-  char '('
+list = listWith '(' ')'
+  <|> listWith '[' ']'
+
+listWith :: Char -> Char -> Parser TExpr
+listWith open close = do
+  char open
   contents <- trials
-  char ')'
+  char close
   return $ TList contents
 
 parseText = fmap (catMaybes . map filterTExprs) . parse (trials) ""

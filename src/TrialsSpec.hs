@@ -1,19 +1,21 @@
 module TestTrials where
 
+import Data.Foldable (for_)
 import Trials
 import Test.Hspec
 
 main :: IO ()
 main = hspec $ do
-  describe "parsing lists" $ do
-    it "works for empty" $ do
-      parseText "()" `shouldParseTo` [TList []]
-    it "ignores spaces" $ do
-      parseText "  (  ) " `shouldParseTo` [TList []]
-    it "parses a nested list" $ do
-      parseText "(())" `shouldParseTo` [TList [TList []]]
-    it "parses _crazy_ nested lists" $ do
-      parseText "((() () ()))" `shouldParseTo` [TList [TList [TList [], TList [], TList []]]]
+  for_ [("(", ")"), ("[", "]")] $ \(o, c) ->
+    describe ("parsing lists using " ++ o ++ c) $ do
+      it "works for empty" $ do
+        parseText (o ++ c) `shouldParseTo` [TList []]
+      it "ignores spaces" $ do
+        parseText ("  " ++ o ++ "  " ++ c ++ " ") `shouldParseTo` [TList []]
+      it "parses a nested list" $ do
+        parseText (o ++ o ++ c ++ c) `shouldParseTo` [TList [TList []]]
+      it "parses _crazy_ nested lists" $ do
+        parseText (o ++ o ++ o ++ c ++ o ++ c ++ o ++ c ++ c ++ c) `shouldParseTo` [TList [TList [TList [], TList [], TList []]]]
 
   describe "parsing integers" $ do
     it  "works for 0" $ do
@@ -45,4 +47,10 @@ main = hspec $ do
     it "works for applications of subtraction" $ do
       parseText "(- 45 3)" `shouldParseTo` [TList [TSymbol "-", TInt 45, TInt 3]]
 
+  describe "parsing failures" $ do
+    it "when mixing '()'s and '[]'s inappropriately" $ do
+      shouldError $ parseText "(]"
+
 shouldParseTo a b = a `shouldBe` Right b
+shouldError (Right _) = 1 `shouldBe` 2
+shouldError (Left _) = 1 `shouldBe` 1
