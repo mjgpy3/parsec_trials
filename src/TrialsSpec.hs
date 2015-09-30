@@ -44,6 +44,10 @@ main = hspec $ do
       parseText "-" `shouldParseTo` [TSymbol "-"]
     it "can split itself from numbers" $ do
       parseText "-4abc" `shouldParseTo` [TInt (-4), TSymbol "abc"]
+    it "can parse symbols containing digits" $ do
+      parseText "asym42" `shouldParseTo` [TSymbol "asym42"]
+    it "can parse strange, purely symbolic symbols" $ do
+      parseText "<-~!!@@~->" `shouldParseTo` [TSymbol "<-~!!@@~->"]
 
   describe "parsing combinations" $ do
     it "works for applications of subtraction" $ do
