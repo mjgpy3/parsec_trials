@@ -41,4 +41,8 @@ main = hspec $ do
     it "works for -" $ do
       parseText "-" `shouldParseTo` [TSymbol "-"]
 
+  describe "parsing combinations" $ do
+    it "works for applications of subtraction" $ do
+      parseText "(- 45 3)" `shouldParseTo` [TList [TSymbol "-", TInt 45, TInt 3]]
+
 shouldParseTo a b = a `shouldBe` Right b
