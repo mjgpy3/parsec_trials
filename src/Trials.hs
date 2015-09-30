@@ -74,6 +74,4 @@ list = do
   char ')'
   return $ TList contents
 
-parseText text = case parse (trials) "" text of
-  (Right exprs) -> Right $ catMaybes $ map filterTExprs exprs
-  err -> err
+parseText = fmap (catMaybes . map filterTExprs) . parse (trials) ""
