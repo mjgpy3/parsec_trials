@@ -16,15 +16,21 @@ filterTExprs x = Just x
 
 trials :: Parser [TExpr]
 trials = many $
-  symbol
-  <|> number
+  number
+  <|> symbol
   <|> list
   <|> whitespace
 
 symbol :: Parser TExpr
 symbol = do
-  char ':'
-  return $ TSymbol ":"
+  f <- symbolChar
+  s <- many symbolChar
+  return $ TSymbol (f:s)
+  where
+  symbolChar = letter <|> digit <|> sym
+
+sym :: Parser Char
+sym = oneOf "!$%&|*+-/:<=>?@^_~#"
 
 whitespace :: Parser TExpr
 whitespace = do

@@ -34,5 +34,7 @@ main = hspec $ do
   describe "parsing symbols" $ do
     it "works for :" $ do
       parseText ":" `shouldParseTo` [TSymbol ":"]
+    it "works for multi character symbols" $ do
+      parseText "abcedfg" `shouldParseTo` [TSymbol "abcedfg"]
 
 shouldParseTo a b = a `shouldBe` Right b
