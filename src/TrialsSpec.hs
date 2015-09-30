@@ -33,6 +33,10 @@ main = hspec $ do
     it  "works for -42.2" $ do
       parseText "-42.2" `shouldParseTo` [TFloat (-42.2)]
 
+  describe "parsing strings" $ do
+    it  "works for the empty string" $ do
+      parseText "\"\"" `shouldParseTo` [TString []]
+
   describe "parsing symbols" $ do
     it "works for :" $ do
       parseText ":" `shouldParseTo` [TSymbol ":"]

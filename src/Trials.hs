@@ -7,7 +7,8 @@ data TExpr = TList [TExpr]
   | TInt Int
   | TFloat Float
   | TSpace
-  | TSymbol String deriving (Show, Eq)
+  | TSymbol String
+  | TString String deriving (Show, Eq)
 
 filterTExprs :: TExpr -> Maybe TExpr
 filterTExprs (TList xs) = Just $ TList $ catMaybes $ map filterTExprs xs
@@ -16,18 +17,24 @@ filterTExprs x = Just x
 
 trials :: Parser [TExpr]
 trials = many $
-  try number
+  str
+  <|> try number
   <|> symbol
   <|> list
   <|> whitespace
 
+str :: Parser TExpr
+str = do
+  char '"'
+  char '"'
+  return $ TString []
+
 symbol :: Parser TExpr
 symbol = do
+  let symbolChar = letter <|> digit <|> sym
   f <- symbolChar
   s <- many symbolChar
   return $ TSymbol (f:s)
-  where
-  symbolChar = letter <|> digit <|> sym
 
 sym :: Parser Char
 sym = oneOf "!$%&|*+-/:<=>?@^_~#"
