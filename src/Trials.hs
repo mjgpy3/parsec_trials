@@ -6,7 +6,8 @@ import Text.ParserCombinators.Parsec
 data TExpr = TList [TExpr]
   | TInt Int
   | TFloat Float
-  | TSpace deriving (Show, Eq)
+  | TSpace
+  | TSymbol String deriving (Show, Eq)
 
 filterTExprs :: TExpr -> Maybe TExpr
 filterTExprs (TList xs) = Just $ TList $ catMaybes $ map filterTExprs xs
@@ -15,9 +16,15 @@ filterTExprs x = Just x
 
 trials :: Parser [TExpr]
 trials = many $
-  number
+  symbol
+  <|> number
   <|> list
   <|> whitespace
+
+symbol :: Parser TExpr
+symbol = do
+  char ':'
+  return $ TSymbol ":"
 
 whitespace :: Parser TExpr
 whitespace = do

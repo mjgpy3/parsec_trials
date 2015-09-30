@@ -14,6 +14,7 @@ main = hspec $ do
       parseText "(())" `shouldParseTo` [TList [TList []]]
     it "parses _crazy_ nested lists" $ do
       parseText "((() () ()))" `shouldParseTo` [TList [TList [TList [], TList [], TList []]]]
+
   describe "parsing integers" $ do
     it  "works for 0" $ do
       parseText "0" `shouldParseTo` [TInt 0]
@@ -23,10 +24,15 @@ main = hspec $ do
       parseText "42" `shouldParseTo` [TInt 42]
     it  "works for -42" $ do
       parseText "-42" `shouldParseTo` [TInt (-42)]
+
   describe "parsing floats" $ do
     it  "works for 42.2" $ do
       parseText "42.2" `shouldParseTo` [TFloat 42.2]
     it  "works for -42.2" $ do
       parseText "-42.2" `shouldParseTo` [TFloat (-42.2)]
+
+  describe "parsing symbols" $ do
+    it "works for :" $ do
+      parseText ":" `shouldParseTo` [TSymbol ":"]
 
 shouldParseTo a b = a `shouldBe` Right b
