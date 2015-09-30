@@ -36,6 +36,8 @@ main = hspec $ do
   describe "parsing strings" $ do
     it  "works for the empty string" $ do
       parseText "\"\"" `shouldParseTo` [TString []]
+    it  "works for a string containing a word" $ do
+      parseText "\"trials\"" `shouldParseTo` [TString "trials"]
 
   describe "parsing symbols" $ do
     it "works for :" $ do

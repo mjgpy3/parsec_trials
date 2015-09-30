@@ -1,7 +1,7 @@
 module Trials where
 
 import Data.Maybe
-import Text.ParserCombinators.Parsec
+import Text.ParserCombinators.Parsec hiding (string)
 
 data TExpr = TList [TExpr]
   | TInt Int
@@ -17,17 +17,18 @@ filterTExprs x = Just x
 
 trials :: Parser [TExpr]
 trials = many $
-  str
+  string
   <|> try number
   <|> symbol
   <|> list
   <|> whitespace
 
-str :: Parser TExpr
-str = do
+string :: Parser TExpr
+string = do
   char '"'
+  x <- many (noneOf "\"")
   char '"'
-  return $ TString []
+  return $ TString x
 
 symbol :: Parser TExpr
 symbol = do
